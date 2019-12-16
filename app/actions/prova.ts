@@ -54,7 +54,7 @@ public Post(){
 @Get('/getProva')
 public Get(){
     
-let resposta = [''];
+let resposta = new Array<String>();
 let provas = db.collection('provas');
 let queryRef = provas.get()
 .then((snapshot : any) => {

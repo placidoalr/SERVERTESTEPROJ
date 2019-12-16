@@ -1,0 +1,1 @@
+O editar prova, deletará todas as questões e irá inserir as que o usuário deixar. (A verificação se peso passou de 100 deverá ficar no backend da tela)

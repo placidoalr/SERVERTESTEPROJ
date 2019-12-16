@@ -6,6 +6,7 @@ import {KernelUtils} from '../kernel/kernel-utils';
 import {db} from '../server';
 let i : any = 0;
 
+let resposta = new Array<String>();
 
 export class QuestProvaAction extends Action{
 
@@ -13,8 +14,10 @@ private validateData(){
 
     if(this.req.body.provaID != '' &&
         this.req.body.questID != '' &&
+        this.req.body.peso != '' &&
         this.req.body.provaID != undefined &&
-        this.req.body.questID != undefined){
+        this.req.body.questID != undefined &&
+        this.req.body.peso != undefined){
             return true
     }else{
         return false
@@ -23,14 +26,15 @@ private validateData(){
 private generateData(add:any){
     let id = '';
     if(add){
-        id =  'questao'+i;
+        id =  'questprova'+i;
     }else{
         id = this.req.body.id
     }
     let data = {
         id: id,
         provaID: this.req.body.provaID,
-        questID: this.req.body.questID
+        questID: this.req.body.questID,
+        peso: this.req.body.peso
     };
     return data
 }
@@ -54,11 +58,10 @@ public Post(){
 }
 
 @Get('/getQuestProva')
-public Get(){
-    
-let resposta = [''];
+public Get(idProva : any){
+    console.log(this.req.body.idProva)
 let questoes = db.collection('questprovas');
-let queryRef = questoes.get()
+let queryRef = questoes.where('provaID', '==',this.req.body.idProva).get()
 .then((snapshot : any) => {
   if (snapshot.empty) {
     console.log('No matching documents.');
@@ -66,21 +69,44 @@ let queryRef = questoes.get()
   }
   
   snapshot.forEach((doc : any) => {
-    resposta.push(doc.data());
-  });
-  this.sendAnswer({
-    questoes    : resposta
-});
+      console.log(doc.data().questID)
+ let queryQuests = db.collection('questoes').where('id','==',doc.data().questID).get()
+.promise.then((snapshot1 : any) => {
+  if (snapshot1.empty) {
+    console.log('No matching documents.');
+    return;
+  }
+  
+   snapshot1.forEach((doc1 : any) => {
+    resposta.push(doc1.data());
+    
+  }).then( 
+      (resposta : any) =>{
+        console.log(resposta)
+        this.sendAnswer({
+          questoes : resposta
+        });
+      }
+  )
+  
+
 })
 .catch((err : any) => {
   console.log('Error getting documents', err);
 });
+  });
+  
+})
+.catch((err : any) => {
+  console.log('Error getting documents', err);
+});
+
 }
-@Post('/editQuestao')
+@Patch('/delQuestProva')
 public Edit(){
     if(this.validateData()){
         let data = this.generateData(false);
-        let setDoc = db.collection('questoes').doc(data.id).set(data);
+        let delDoc = db.collection('questoes').doc(data.id).delete();
         this.sendAnswer({
             token    : new VPUtils().generateGUID().toUpperCase()
         });

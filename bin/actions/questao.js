@@ -88,7 +88,7 @@ var QuestaoAction = /** @class */ (function (_super) {
     };
     QuestaoAction.prototype.Get = function () {
         var _this = this;
-        var resposta = [''];
+        var resposta = new Array();
         var questoes = server_1.db.collection('questoes');
         var queryRef = questoes.get()
             .then(function (snapshot) {

@@ -48,9 +48,6 @@ var ProvaAction = /** @class */ (function (_super) {
     };
     ProvaAction.prototype.generateData = function (add) {
         var id = '';
-        var elementId = 1;
-        var quest = [''];
-        var peso = [''];
         console.log("5");
         if (add) {
             id = 'prova' + i;
@@ -59,23 +56,14 @@ var ProvaAction = /** @class */ (function (_super) {
             id = this.req.body.id;
         }
         var data = {
-            id: id,
-            quest: ['']
+            id: id
         };
-        console.log("4");
-        this.req.body.forEach(function (element) {
-            console.log(element);
-            data.quest.push(element);
-        });
-        console.log("6");
         return data;
     };
     ProvaAction.prototype.Post = function () {
         i += 1;
-        // if(this.validateData()){
-        console.log("1");
+        // if(this.validateData()){ 
         var setDoc = server_1.db.collection('provas').doc('prova' + i).set(this.generateData(true));
-        console.log("2");
         this.sendAnswer({
             token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
@@ -85,7 +73,7 @@ var ProvaAction = /** @class */ (function (_super) {
     };
     ProvaAction.prototype.Get = function () {
         var _this = this;
-        var resposta = [''];
+        var resposta = new Array();
         var provas = server_1.db.collection('provas');
         var queryRef = provas.get()
             .then(function (snapshot) {

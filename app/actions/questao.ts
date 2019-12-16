@@ -68,7 +68,7 @@ public Post(){
 @Get('/getQuestao')
 public Get(){
     
-let resposta = [''];
+let resposta = new Array<String>();
 let questoes = db.collection('questoes');
 let queryRef = questoes.get()
 .then((snapshot : any) => {
@@ -81,7 +81,7 @@ let queryRef = questoes.get()
     resposta.push(doc.data());
   });
   this.sendAnswer({
-    questoes    : resposta
+    questoes : resposta
 });
 })
 .catch((err : any) => {
