@@ -4,6 +4,7 @@ import {ActionType} from '../kernel/route-types';
 import {VPUtils} from '../utils/vputils';
 import {KernelUtils} from '../kernel/kernel-utils';
 import {db} from '../server';
+import { async } from 'rxjs/internal/scheduler/async';
 let i : any = 0;
 
 let resposta = new Array<String>();
@@ -58,48 +59,41 @@ public Post(){
 }
 
 @Get('/getQuestProva')
-public Get(idProva : any){
+public async Get(idProva : any){
     console.log(this.req.body.idProva)
 let questoes = db.collection('questprovas');
-let queryRef = questoes.where('provaID', '==',this.req.body.idProva).get()
-.then((snapshot : any) => {
+let snapshot = await questoes.where('provaID', '==',this.req.body.idProva).get()
+
   if (snapshot.empty) {
     console.log('No matching documents.');
     return;
   }
   
-  snapshot.forEach((doc : any) => {
-      console.log(doc.data().questID)
- let queryQuests = db.collection('questoes').where('id','==',doc.data().questID).get()
-.promise.then((snapshot1 : any) => {
+  await snapshot.forEach(async (doc : any) => {
+    
+    let snapshot1 = await db.collection('questoes').where('id','==',doc.data().questID).get();
+
   if (snapshot1.empty) {
     console.log('No matching documents.');
     return;
   }
-  
-   snapshot1.forEach((doc1 : any) => {
-    resposta.push(doc1.data());
-    
-  }).then( 
-      (resposta : any) =>{
-        console.log(resposta)
-        this.sendAnswer({
-          questoes : resposta
+  this.sendAnswer({
+    questoes    : resposta = await snap(snapshot1)
+});
+  async function snap(snapshot11 : any){
+      const respo = new Array<any>();
+      snapshot11.forEach((doc1 : any) => {
+        respo.push(doc1.data());
+        console.log(doc1.data());
         });
-      }
-  )
+        
+        return await Promise.all(respo);
   
-
-})
-.catch((err : any) => {
-  console.log('Error getting documents', err);
-});
+  
+  }
   });
-  
-})
-.catch((err : any) => {
-  console.log('Error getting documents', err);
-});
+        
+
 
 }
 @Patch('/delQuestProva')
