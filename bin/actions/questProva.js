@@ -66,6 +66,7 @@ var kernel_utils_1 = require("../kernel/kernel-utils");
 var server_1 = require("../server");
 var i = 0;
 var resposta = new Array();
+var resp = new Array();
 var QuestProvaAction = /** @class */ (function (_super) {
     __extends(QuestProvaAction, _super);
     function QuestProvaAction() {
@@ -116,8 +117,69 @@ var QuestProvaAction = /** @class */ (function (_super) {
     };
     QuestProvaAction.prototype.Get = function (idProva) {
         return __awaiter(this, void 0, void 0, function () {
+            function snap(snapshot0) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var cont, respo1;
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                cont = 1;
+                                respo1 = new Array();
+                                return [4 /*yield*/, snapshot0.forEach(function (doc) { return __awaiter(_this, void 0, void 0, function () {
+                                        function snap1(snapshot11) {
+                                            return __awaiter(this, void 0, void 0, function () {
+                                                var respo;
+                                                return __generator(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0:
+                                                            respo = new Array();
+                                                            return [4 /*yield*/, snapshot11.forEach(function (doc1) {
+                                                                    respo.push(doc1.data());
+                                                                })];
+                                                        case 1:
+                                                            _a.sent();
+                                                            return [4 /*yield*/, Promise.all(respo)];
+                                                        case 2: return [2 /*return*/, _a.sent()];
+                                                    }
+                                                });
+                                            });
+                                        }
+                                        var snapshot1;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, server_1.db.collection('questoes').where('id', '==', doc.data().questID).get()];
+                                                case 1:
+                                                    snapshot1 = _a.sent();
+                                                    if (snapshot1.empty) {
+                                                        console.log('No matching documents.');
+                                                        return [2 /*return*/];
+                                                    }
+                                                    return [4 /*yield*/, snap1(snapshot1)];
+                                                case 2:
+                                                    resposta = _a.sent();
+                                                    console.log("RESPOSTA = " + resposta);
+                                                    return [4 /*yield*/, respo1.push(resposta)];
+                                                case 3:
+                                                    _a.sent();
+                                                    console.log("RESPO1= " + respo1);
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); })];
+                            case 1:
+                                _a.sent();
+                                cont = 1;
+                                console.log("ENDRESP = " + respo1);
+                                if (!(cont > 1)) return [3 /*break*/, 3];
+                                return [4 /*yield*/, Promise.all(respo1)];
+                            case 2: return [2 /*return*/, _a.sent()];
+                            case 3: return [2 /*return*/, respo1];
+                        }
+                    });
+                });
+            }
             var questoes, snapshot;
-            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -130,46 +192,15 @@ var QuestProvaAction = /** @class */ (function (_super) {
                             console.log('No matching documents.');
                             return [2 /*return*/];
                         }
-                        return [4 /*yield*/, snapshot.forEach(function (doc) { return __awaiter(_this, void 0, void 0, function () {
-                                function snap(snapshot11) {
-                                    return __awaiter(this, void 0, void 0, function () {
-                                        var respo;
-                                        return __generator(this, function (_a) {
-                                            switch (_a.label) {
-                                                case 0:
-                                                    respo = new Array();
-                                                    snapshot11.forEach(function (doc1) {
-                                                        respo.push(doc1.data());
-                                                        console.log(doc1.data());
-                                                    });
-                                                    return [4 /*yield*/, Promise.all(respo)];
-                                                case 1: return [2 /*return*/, _a.sent()];
-                                            }
-                                        });
-                                    });
-                                }
-                                var snapshot1, _a, _b;
-                                return __generator(this, function (_c) {
-                                    switch (_c.label) {
-                                        case 0: return [4 /*yield*/, server_1.db.collection('questoes').where('id', '==', doc.data().questID).get()];
-                                        case 1:
-                                            snapshot1 = _c.sent();
-                                            if (snapshot1.empty) {
-                                                console.log('No matching documents.');
-                                                return [2 /*return*/];
-                                            }
-                                            _a = this.sendAnswer;
-                                            _b = {};
-                                            return [4 /*yield*/, snap(snapshot1)];
-                                        case 2:
-                                            _a.apply(this, [(_b.questoes = resposta = _c.sent(),
-                                                    _b)]);
-                                            return [2 /*return*/];
-                                    }
-                                });
-                            }); })];
+                        return [4 /*yield*/, snap(snapshot)];
                     case 2:
-                        _a.sent();
+                        resp = _a.sent();
+                        if (resp.length >= 1) {
+                            console.log("AAAAAAAAA " + resp);
+                            this.sendAnswer({
+                                questoes: resp
+                            });
+                        }
                         return [2 /*return*/];
                 }
             });
