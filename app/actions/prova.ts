@@ -25,14 +25,19 @@ private validateData(){
 private generateData(add:any){
     let id = '';
     console.log("5")
+    let data ={};
     if(add){
         id =  'prova'+i;
+        data = {
+            id: id,
+            prova : this.req.body
+        };
     }else{
-        id = this.req.body.id
+        data = {
+            id: this.req.body.id,
+            prova : this.req.body
+        };
     }
-    let data = {
-        id: id
-    };
     
     return data
 }

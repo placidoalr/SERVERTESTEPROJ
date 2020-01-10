@@ -49,15 +49,20 @@ var ProvaAction = /** @class */ (function (_super) {
     ProvaAction.prototype.generateData = function (add) {
         var id = '';
         console.log("5");
+        var data = {};
         if (add) {
             id = 'prova' + i;
+            data = {
+                id: id,
+                prova: this.req.body
+            };
         }
         else {
-            id = this.req.body.id;
+            data = {
+                id: this.req.body.id,
+                prova: this.req.body
+            };
         }
-        var data = {
-            id: id
-        };
         return data;
     };
     ProvaAction.prototype.Post = function () {

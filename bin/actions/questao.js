@@ -36,17 +36,18 @@ var QuestaoAction = /** @class */ (function (_super) {
     }
     QuestaoAction.prototype.validateData = function () {
         if (this.req.body.ask != '' &&
-            this.req.body.q1 != '' &&
-            this.req.body.q2 != '' &&
-            this.req.body.q3 != '' &&
-            this.req.body.q4 != '' &&
+            this.req.body.r1 != '' &&
+            this.req.body.r2 != '' &&
+            this.req.body.r3 != '' &&
+            this.req.body.r4 != '' &&
             this.req.body.certa != '' &&
             this.req.body.ask != undefined &&
-            this.req.body.q1 != undefined &&
-            this.req.body.q2 != undefined &&
-            this.req.body.q3 != undefined &&
-            this.req.body.q4 != undefined &&
+            this.req.body.r1 != undefined &&
+            this.req.body.r2 != undefined &&
+            this.req.body.r3 != undefined &&
+            this.req.body.r4 != undefined &&
             this.req.body.certa != undefined) {
+            console.log("asdfasfas");
             return true;
         }
         else {
@@ -64,10 +65,10 @@ var QuestaoAction = /** @class */ (function (_super) {
         var data = {
             id: id,
             ask: this.req.body.ask,
-            opt1: this.req.body.q1,
-            opt2: this.req.body.q2,
-            opt3: this.req.body.q3,
-            opt4: this.req.body.q4,
+            r1: this.req.body.r1,
+            r2: this.req.body.r2,
+            r3: this.req.body.r3,
+            r4: this.req.body.r4,
             certa: this.req.body.certa
         };
         return data;
@@ -76,7 +77,7 @@ var QuestaoAction = /** @class */ (function (_super) {
         i += 1;
         if (this.validateData()) {
             var setDoc = server_1.db.collection('questoes').doc('questao' + i).set(this.generateData(true));
-            console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
+            console.log("falta = " + this.req.body.certa + this.req.body.r1, this.req.body.r2, this.req.body.r3, this.req.body.r4 + " iolo = " + this.req.body);
             this.sendAnswer({
                 token: new vputils_1.VPUtils().generateGUID().toUpperCase()
             });
@@ -100,7 +101,7 @@ var QuestaoAction = /** @class */ (function (_super) {
                 resposta.push(doc.data());
             });
             _this.sendAnswer({
-                questoes: resposta
+                resposta: resposta
             });
         })
             .catch(function (err) {
