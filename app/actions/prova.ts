@@ -24,7 +24,6 @@ private validateData(){
 }
 private generateData(add:any){
     let id = '';
-    console.log("5")
     let data ={};
     if(add){
         id =  'prova'+i;
