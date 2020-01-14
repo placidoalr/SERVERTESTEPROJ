@@ -26,70 +26,39 @@ var decorators_1 = require("../decorators");
 var action_1 = require("../kernel/action");
 var route_types_1 = require("../kernel/route-types");
 var vputils_1 = require("../utils/vputils");
-var kernel_utils_1 = require("../kernel/kernel-utils");
 var server_1 = require("../server");
 var i = 0;
-var QuestaoAction = /** @class */ (function (_super) {
-    __extends(QuestaoAction, _super);
-    function QuestaoAction() {
+var RealizadaAction = /** @class */ (function (_super) {
+    __extends(RealizadaAction, _super);
+    function RealizadaAction() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    QuestaoAction.prototype.validateData = function () {
-        if (this.req.body.ask != '' &&
-            this.req.body.q1 != '' &&
-            this.req.body.q2 != '' &&
-            this.req.body.q3 != '' &&
-            this.req.body.q4 != '' &&
-            this.req.body.certa != '' &&
-            this.req.body.ask != undefined &&
-            this.req.body.q1 != undefined &&
-            this.req.body.q2 != undefined &&
-            this.req.body.q3 != undefined &&
-            this.req.body.q4 != undefined &&
-            this.req.body.certa != undefined) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-    QuestaoAction.prototype.generateData = function (add) {
+    RealizadaAction.prototype.generateData = function (add) {
         var id = '';
         if (add) {
-            id = 'questao' + i;
+            id = 'realizada' + i;
         }
         else {
             id = this.req.body.id;
         }
         var data = {
-            id: id,
-            ask: this.req.body.ask,
-            opt1: this.req.body.q1,
-            opt2: this.req.body.q2,
-            opt3: this.req.body.q3,
-            opt4: this.req.body.q4,
-            certa: this.req.body.certa
+            "id": id,
+            "prova": this.req.body
         };
         return data;
     };
-    QuestaoAction.prototype.Post = function () {
+    RealizadaAction.prototype.Post = function () {
         i += 1;
-        if (this.validateData()) {
-            var setDoc = server_1.db.collection('questoes').doc('questao' + i).set(this.generateData(true));
-            console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
-            this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }
-        else {
-            console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
-            this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
-        }
+        var setDoc = server_1.db.collection('realizadas').doc('realizada' + i).set(this.generateData(true));
+        console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
     };
-    QuestaoAction.prototype.Get = function () {
+    RealizadaAction.prototype.Get = function () {
         var _this = this;
         var resposta = [''];
-        var questoes = server_1.db.collection('questoes');
+        var questoes = server_1.db.collection('realizadas');
         var queryRef = questoes.get()
             .then(function (snapshot) {
             if (snapshot.empty) {
@@ -100,47 +69,41 @@ var QuestaoAction = /** @class */ (function (_super) {
                 resposta.push(doc.data());
             });
             _this.sendAnswer({
-                questoes: resposta
+                realizadas: resposta
             });
         })
             .catch(function (err) {
             console.log('Error getting documents', err);
         });
     };
-    QuestaoAction.prototype.Edit = function () {
-        if (this.validateData()) {
-            var data = this.generateData(false);
-            var setDoc = server_1.db.collection('questoes').doc(data.id).set(data);
-            this.sendAnswer({
-                token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-            });
-        }
-        else {
-            console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
-            this.sendError(new kernel_utils_1.KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
-        }
+    RealizadaAction.prototype.Edit = function () {
+        var data = this.generateData(false);
+        var setDoc = server_1.db.collection('questoes').doc(data.id).set(data);
+        this.sendAnswer({
+            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
+        });
     };
-    QuestaoAction.prototype.defineVisibility = function () {
+    RealizadaAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
     __decorate([
-        decorators_1.Post('/addQuestao'),
+        decorators_1.Post('/addRealizada'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], QuestaoAction.prototype, "Post", null);
+    ], RealizadaAction.prototype, "Post", null);
     __decorate([
-        decorators_1.Get('/getQuestao'),
+        decorators_1.Get('/getRealizada'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], QuestaoAction.prototype, "Get", null);
+    ], RealizadaAction.prototype, "Get", null);
     __decorate([
         decorators_1.Post('/editQuestao'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], QuestaoAction.prototype, "Edit", null);
-    return QuestaoAction;
+    ], RealizadaAction.prototype, "Edit", null);
+    return RealizadaAction;
 }(action_1.Action));
-exports.QuestaoAction = QuestaoAction;
+exports.RealizadaAction = RealizadaAction;

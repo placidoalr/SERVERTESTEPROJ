@@ -71,7 +71,7 @@ let queryRef = provas.get()
     resposta.push(doc.data());
   });
   this.sendAnswer({
-    provas    : resposta
+    resposta
 });
 })
 .catch((err : any) => {

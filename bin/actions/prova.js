@@ -48,7 +48,6 @@ var ProvaAction = /** @class */ (function (_super) {
     };
     ProvaAction.prototype.generateData = function (add) {
         var id = '';
-        console.log("5");
         var data = {};
         if (add) {
             id = 'prova' + i;
@@ -90,7 +89,7 @@ var ProvaAction = /** @class */ (function (_super) {
                 resposta.push(doc.data());
             });
             _this.sendAnswer({
-                provas: resposta
+                resposta: resposta
             });
         })
             .catch(function (err) {
