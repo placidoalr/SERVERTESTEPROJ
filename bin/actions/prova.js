@@ -66,14 +66,10 @@ var ProvaAction = /** @class */ (function (_super) {
     };
     ProvaAction.prototype.Post = function () {
         i += 1;
-        // if(this.validateData()){ 
         var setDoc = server_1.db.collection('provas').doc('prova' + i).set(this.generateData(true));
         this.sendAnswer({
             token: new vputils_1.VPUtils().generateGUID().toUpperCase()
         });
-        // }else{
-        //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
-        // }
     };
     ProvaAction.prototype.Get = function () {
         var _this = this;
@@ -95,21 +91,7 @@ var ProvaAction = /** @class */ (function (_super) {
             .catch(function (err) {
             console.log('Error getting documents', err);
         });
-    }; /*
-    @Post('/editQuestao')
-    public Edit(){
-        if(this.validateData()){
-            let data = this.generateData(false);
-            let setDoc = db.collection('questoes').doc(data.id).set(data);
-            this.sendAnswer({
-                token    : new VPUtils().generateGUID().toUpperCase()
-            });
-        }else{
-            console.log("falta = "+this.req.body.certa+this.req.body.q1,this.req.body.q2,this.req.body.q3,this.req.body.q4 + " iolo = "+this.req.body);
-            this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
-        }
-       
-    }*/
+    };
     ProvaAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };

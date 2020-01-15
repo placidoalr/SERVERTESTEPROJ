@@ -12,9 +12,7 @@ export class LogonAction extends Action{
 
         if(this.req.body.userName == 'admin' && this.req.body.password == 'teste@123')
             this.sendAnswer({
-                token    : new VPUtils().generateGUID().toUpperCase(),
-                userName : this.req.body.userName,
-                password : this.req.body.password
+                token    : new VPUtils().generateGUID().toUpperCase()
             });
         else{
             console.log('Usuário ou senha incorretos');

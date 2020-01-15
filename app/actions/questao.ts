@@ -9,7 +9,7 @@ let i: any = 0;
 
 export class QuestaoAction extends Action {
 
-    private validateData() {
+    private validateData() { //Verifica se chegou todos os dados necessários
         if (this.req.body.ask != '' &&
             this.req.body.a != '' &&
             this.req.body.b != '' &&
@@ -22,14 +22,12 @@ export class QuestaoAction extends Action {
             this.req.body.c != undefined &&
             this.req.body.d != undefined &&
             this.req.body.certa != undefined) {
-
-            console.log("asdfasfas")
             return true
         } else {
             return false
         }
     }
-    private generateData(add: any) {
+    private generateData(add: any) {//gera o json que será enviado para o banco
         let id = '';
         if (add) {
             id = 'questao' + i;
@@ -52,6 +50,7 @@ export class QuestaoAction extends Action {
     @Post('/addQuestao')
     public Post() {
         i += 1;
+        //após validar se tem todos os dados ele insere os mesmos no documento questao da collection questoes
         if (this.validateData()) {
             let setDoc = db.collection('questoes').doc('questao' + i).set(this.generateData(true));
             this.sendAnswer({
@@ -67,18 +66,18 @@ export class QuestaoAction extends Action {
 
         let resposta = new Array<String>();
         let questoes = db.collection('questoes');
-        let queryRef = questoes.get()
+        let queryRef = questoes.get()//Select de todas as questões
             .then((snapshot: any) => {
                 if (snapshot.empty) {
                     console.log('No matching documents.');
                     return;
                 }
 
-                snapshot.forEach((doc: any) => {
+                snapshot.forEach((doc: any) => {//foreach inserindo os dados pesquisados na resposta
                     resposta.push(doc.data());
                 });
                 this.sendAnswer({
-                    resposta
+                    resposta //retornando a resposta
                 });
             })
             .catch((err: any) => {
@@ -88,9 +87,9 @@ export class QuestaoAction extends Action {
 
     @Post('/editQuestao')
     public Edit() {
-        if (this.validateData()) {
+        if (this.validateData()) {//valida os dados e após isso gera a data com false para exemplificar que o id já existe e não deve ser criado um novo
             let data = this.generateData(false);
-            let setDoc = db.collection('questoes').doc(data.id).set(data);
+            let setDoc = db.collection('questoes').doc(data.id).set(data);//salva a data no documento que possui o mesmo nome da data.id na collection de questoes
             this.sendAnswer({
                 token: new VPUtils().generateGUID().toUpperCase()
             });

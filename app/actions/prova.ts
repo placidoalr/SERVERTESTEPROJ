@@ -6,23 +6,9 @@ import { KernelUtils } from '../kernel/kernel-utils';
 import { db } from '../server';
 import { stringify } from 'querystring';
 let i: any = 0;
-/*Questoes[{questao,peso}]
-
-
-*/
-
 export class ProvaAction extends Action {
 
-    private validateData() {
-
-        if (this.req.body.quest1 != '' &&
-            this.req.body.quest1 != undefined) {
-            return true
-        } else {
-            return false
-        }
-    }
-    private generateData(add: any) {
+    private generateData(add: any) {//gera o json que será enviado para o banco
         let id = '';
         let data = {};
         if (add) {
@@ -45,6 +31,7 @@ export class ProvaAction extends Action {
     @Post('/addProva')
     public Post() {
         i += 1;
+        //envia o json para o doc prova da collection provas
         let setDoc = db.collection('provas').doc('prova' + i).set(this.generateData(true));
         this.sendAnswer({
             token: new VPUtils().generateGUID().toUpperCase()
@@ -57,17 +44,17 @@ export class ProvaAction extends Action {
 
         let resposta = new Array<String>();
         let provas = db.collection('provas');
-        let queryRef = provas.get()
+        let queryRef = provas.get()//get das provas no banco de dados
             .then((snapshot: any) => {
                 if (snapshot.empty) {
                     console.log('No matching documents.');
                     return;
                 }
 
-                snapshot.forEach((doc: any) => {
+                snapshot.forEach((doc: any) => {//foreach inserindo os dados na resposta
                     resposta.push(doc.data());
                 });
-                this.sendAnswer({
+                this.sendAnswer({//retorna a resposta para o provider do frontEnd
                     resposta
                 });
             })

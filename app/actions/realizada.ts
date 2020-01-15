@@ -9,7 +9,7 @@ let i: any = 0;
 
 export class RealizadaAction extends Action {
 
-    private generateData(add: any) {
+    private generateData(add: any) {//cria um json para enviar para o database
         let id = '';
         if (add) {
             id = 'realizada' + i;
@@ -27,10 +27,8 @@ export class RealizadaAction extends Action {
     @Post('/addRealizada')
     public Post() {
         i += 1;
-
+        //envia o json para o doc realizada da collection realizadas
         let setDoc = db.collection('realizadas').doc('realizada' + i).set(this.generateData(true));
-
-        console.log("falta = " + this.req.body.certa + this.req.body.q1, this.req.body.q2, this.req.body.q3, this.req.body.q4 + " iolo = " + this.req.body);
         this.sendAnswer({
             token: new VPUtils().generateGUID().toUpperCase()
         });
@@ -40,18 +38,18 @@ export class RealizadaAction extends Action {
     public Get() {
 
         let resposta = new Array<String>();
-        let questoes = db.collection('realizadas');
-        let queryRef = questoes.get()
+        let realizada = db.collection('realizadas');
+        let queryRef = realizada.get()//get das provas realizadas no banco de dados
             .then((snapshot: any) => {
                 if (snapshot.empty) {
                     console.log('No matching documents.');
                     return;
                 }
 
-                snapshot.forEach((doc: any) => {
+                snapshot.forEach((doc: any) => {//foreach inserindo os dados na resposta
                     resposta.push(doc.data());
                 });
-                this.sendAnswer({
+                this.sendAnswer({//retorna a resposta para o provider do frontEnd
                     realizadas: resposta
                 });
             })

@@ -76,13 +76,6 @@ var RealizadaAction = /** @class */ (function (_super) {
             console.log('Error getting documents', err);
         });
     };
-    RealizadaAction.prototype.Edit = function () {
-        var data = this.generateData(false);
-        var setDoc = server_1.db.collection('questoes').doc(data.id).set(data);
-        this.sendAnswer({
-            token: new vputils_1.VPUtils().generateGUID().toUpperCase()
-        });
-    };
     RealizadaAction.prototype.defineVisibility = function () {
         this.actionEscope = route_types_1.ActionType.atPublic;
     };
@@ -98,12 +91,6 @@ var RealizadaAction = /** @class */ (function (_super) {
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
     ], RealizadaAction.prototype, "Get", null);
-    __decorate([
-        decorators_1.Post('/editQuestao'),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", void 0)
-    ], RealizadaAction.prototype, "Edit", null);
     return RealizadaAction;
 }(action_1.Action));
 exports.RealizadaAction = RealizadaAction;
