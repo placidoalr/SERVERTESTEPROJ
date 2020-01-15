@@ -1,97 +1,80 @@
-import {Get, Patch, Post, Put} from '../decorators';
-import {Action} from '../kernel/action';
-import {ActionType} from '../kernel/route-types';
-import {VPUtils} from '../utils/vputils';
-import {KernelUtils} from '../kernel/kernel-utils';
-import {db} from '../server';
+import { Get, Patch, Post, Put } from '../decorators';
+import { Action } from '../kernel/action';
+import { ActionType } from '../kernel/route-types';
+import { VPUtils } from '../utils/vputils';
+import { KernelUtils } from '../kernel/kernel-utils';
+import { db } from '../server';
 import { stringify } from 'querystring';
-let i : any = 0;
+let i: any = 0;
 /*Questoes[{questao,peso}]
 
 
 */
 
-export class ProvaAction extends Action{
+export class ProvaAction extends Action {
 
-private validateData(){
+    private validateData() {
 
-    if(this.req.body.quest1 != '' &&
-        this.req.body.quest1 != undefined){
+        if (this.req.body.quest1 != '' &&
+            this.req.body.quest1 != undefined) {
             return true
-    }else{
-        return false
+        } else {
+            return false
+        }
     }
-}
-private generateData(add:any){
-    let id = '';
-    let data ={};
-    if(add){
-        id =  'prova'+i;
-        data = {
-            id: id,
-            prova : this.req.body
-        };
-    }else{
-        data = {
-            id: this.req.body.id,
-            prova : this.req.body
-        };
+    private generateData(add: any) {
+        let id = '';
+        let data = {};
+        if (add) {
+            id = 'prova' + i;
+            data = {
+                id: id,
+                prova: this.req.body
+            };
+        } else {
+            data = {
+                id: this.req.body.id,
+                prova: this.req.body
+            };
+        }
+
+        return data
     }
-    
-    return data
-}
 
 
     @Post('/addProva')
-public Post(){
-    i += 1;
-    // if(this.validateData()){ 
-            let setDoc = db.collection('provas').doc('prova'+i).set(this.generateData(true));
-            this.sendAnswer({
-                token    : new VPUtils().generateGUID().toUpperCase()
-            });
-    // }else{
-    //     this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
-    // }
-}
-
-@Get('/getProva')
-public Get(){
-    
-let resposta = new Array<String>();
-let provas = db.collection('provas');
-let queryRef = provas.get()
-.then((snapshot : any) => {
-  if (snapshot.empty) {
-    console.log('No matching documents.');
-    return;
-  }
-  
-  snapshot.forEach((doc : any) => {
-    resposta.push(doc.data());
-  });
-  this.sendAnswer({
-    resposta
-});
-})
-.catch((err : any) => {
-  console.log('Error getting documents', err);
-});
-}/*
-@Post('/editQuestao')
-public Edit(){
-    if(this.validateData()){
-        let data = this.generateData(false);
-        let setDoc = db.collection('questoes').doc(data.id).set(data);
+    public Post() {
+        i += 1;
+        let setDoc = db.collection('provas').doc('prova' + i).set(this.generateData(true));
         this.sendAnswer({
-            token    : new VPUtils().generateGUID().toUpperCase()
+            token: new VPUtils().generateGUID().toUpperCase()
         });
-    }else{
-        console.log("falta = "+this.req.body.certa+this.req.body.q1,this.req.body.q2,this.req.body.q3,this.req.body.q4 + " iolo = "+this.req.body);
-        this.sendError(new KernelUtils().createErrorApiObject(401, '1001', 'Falta alguma coisa'));
+
     }
-   
-}*/
+
+    @Get('/getProva')
+    public Get() {
+
+        let resposta = new Array<String>();
+        let provas = db.collection('provas');
+        let queryRef = provas.get()
+            .then((snapshot: any) => {
+                if (snapshot.empty) {
+                    console.log('No matching documents.');
+                    return;
+                }
+
+                snapshot.forEach((doc: any) => {
+                    resposta.push(doc.data());
+                });
+                this.sendAnswer({
+                    resposta
+                });
+            })
+            .catch((err: any) => {
+                console.log('Error getting documents', err);
+            });
+    }
     defineVisibility() {
         this.actionEscope = ActionType.atPublic;
     }
